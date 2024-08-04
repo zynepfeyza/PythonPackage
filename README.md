@@ -81,7 +81,7 @@ python3 -m build
 
 `WHEEL`: Wheel formatına özgü bilgiler içerir.
 
-`RECORD`: 
+`RECORD`: Wheel paketinin içindeki tüm dosyaların bir listesini içerir.
 
 `top_level.txt`: Paket içindeki üst seviye modülleri listeler.
 

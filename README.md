@@ -1,32 +1,46 @@
-# Bir Python Uygulamasının Paket Haline Getirilmesi
-Python projelerini paylaşmanın ve başkalarının bu projeleri kolayca yükleyip kullanmasının en iyi yolu bir paket oluşturmak ve dağıtmaktır.
-
 ## Python Paketi Nedir?
 Belirli bir formatta sıkıştırılmış Python kodu demetleridir. Bu paketler, diğer insanlara dağıtılabilir ve pip gibi araçlarla kurulabilir.
 
 https://packaging.python.org/en/latest/tutorials/packaging-projects/
 
-Bir proje dosyası oluşturulur. Proje ana dizini içerisinde;
-- src klasörünün altında, uygulamamızın kodlarını içeren bir klasör oluşturulur; bu klasörde boş bir `__init__.py` dosyası oluşturulur. Bu dosya Python’a bu dizinin bir paket olduğunu belirtir.
-- Uygulamamızın testlerini içeren bir klasör oluşturulur.
-- Proje ana dizini içerisinde `README.md`, `pyproject.toml` ve `LICENSE` dosyaları oluşturulur.
-  - `README.md` : Projenin genel bilgilerini sağlayan bir belgedir.  
-  - `pyproject.toml` : Proje yapılandırması ve bağımlılıklarını belirlemek için kullanılır.
-  - `LICENSE` : Projenin lisansını belirtir. Lisans, kullanıcıların projeyi nasıl kullanabileceğini, değiştirebileceğini ve dağıtabileceğini tanımlar.
-  
-
-## Proje Yapısı
+## Örnek Paket Yapısı
 ```sh
-PythonPackage/
+my_package/
 ├── LICENSE
 ├── pyproject.toml
 ├── README.md
 ├── src/
 │   └── my_package/
 │       ├── __init__.py
-│       └── main.py
-└── tests/
+│       └── example.py
+│       └── sub_package/
+│          ├── __init__.py
+│          └── sub_module.py
+├── tests/
+│   ├── __init__.py
+└── └── test_example.py
 ```
+`my_package/`: Ana proje dizini.
+
+`__init__.py`: Bu dosya Python’a bu dizinin bir paket olduğunu belirtir.
+
+`example.py`: Paket içindeki bir modül.
+
+`sub_package/`: Alt paket dizini.
+
+`tests/`: Paketle ilgili testlerin bulunduğu dizin.
+
+`test_example.py`: Modüle ait test dosyası.
+
+`README.md`: Projenin genel bilgilerini sağlayan bir belgedir. 
+
+`LICENSE`: Lisans bilgilerini içeren dosya. Lisans, kullanıcıların projeyi nasıl kullanabileceğini, değiştirebileceğini ve dağıtabileceğini tanımlar.
+
+`pyproject.toml`: Proje yapılandırması ve bağımlılıklarını belirlemek için kullanılır.
+
+  
+## Bir Python Uygulamasının Paket Haline Getirilmesi
+Python projelerini paylaşmanın ve başkalarının bu projeleri kolayca yükleyip kullanmasının en iyi yolu bir paket oluşturmak ve dağıtmaktır.
 
 Öncelikle pip'in güncel olduğundan emin olmalıyız.
 ```sh
@@ -44,15 +58,44 @@ build yüklü değilse
 ```sh
 pip install build
 ```
-Bu komut, dist/ dizininde paketleme dosyalarını oluşturur.
+Bu komut, dist/ dizininde paketleme dosyalarını oluşturur. Bu klasörde `.whl` ve `.tar.gz` gibi dosyalar bulunur.
+Aynı zamanda bu komut ile `.egg-info` uzantılı bir dizin oluşur. Bu dizin paketleme ve dağıtım süreci için gerekli meta bilgileri içeren dosyaları içerir. Bu dosyalar:
+
+`dependency_links.txt`: Paketin, yüklenmesi için gerekli olan diğer paketlerin bağlantılarını içerir.
+
+`PKG-INFO`: Paket adı, versiyon, yazar, lisans gibi bilgileri içerir.
+
+`SOURCES.txt`: Paketi oluşturmak için kullanılan tüm dosyaların bir listesidir.
+
+`top_level.txt`: Paketin üst seviye modüllerini veya paketlerini listeler.
 ```sh
 python3 -m build
 ```
-Günümüzde iki ana Python paketi türü vardır:
+- 1- Source Paketleri (.tar.gz): Paketin kaynak kodunu içeren bir sıkıştırılmış dosyadır. Kullanıcılar bu dosyayı indirip, açarak veya kurarak paketi yükleyebilirler.
 
-1- Source Paketleri (.tar.gz): Kaynak kodun snapshot'ı ve ad, sürüm, özet, yazar gibi meta verileri içeren bir dosya içerir.
+- 2- Wheel Paketleri (.whl): Wheel dosyaları, pip gibi paket yönetim araçları tarafından kolayca kurulabilir. Wheel formatı, Python paketlerinin kurulum sürecini hızlandırır çünkü derleme gerektirmez; paketler doğrudan yüklenebilir.
 
-2- Wheel Paketleri (.whl): Egg formatının bir geliştirmesi olup, şu anda en çok önerilen formattır.
+.whl dosyasını ZIP dosyası olarak açabiliriz. İçerisinde:
+
+`METADATA`: Paket bilgilerini içerir.
+
+`WHEEL`: Wheel formatına özgü bilgiler içerir.
+
+`RECORD`: 
+
+`top_level.txt`: Paket içindeki üst seviye modülleri listeler.
+
+`package_name`: Paket içindeki dosyalar ve modülleri içerir.
+```sh
+my_package-0.0.1-py3-none-any.whl
+├── METADATA
+├── WHEEL
+├── RECORD
+├── top_level.txt
+└── my_package/
+    ├── __init__.py
+    └── main.py
+```
 
 ## Paketi Test Etme
 Yeni bir projede paketin çalışıp çalışmadığını test etmek için paket yeni proje dizinine yüklenir.

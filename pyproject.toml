@@ -1,3 +1,7 @@
+[build-system]  # Projenin hangi araçlar ve yapılandırmalarla paketleneceğini belirler.
+requires = ["setuptools", "wheel"]        # Paketleme işlemi için gerekli olan araçları belirtir.
+build-backend = "setuptools.build_meta"   # Paketleme işlemini gerçekleştirecek backend'i belirtir. 
+
 [project]  # Meta verilerini içerir.
 name = "my_package"
 version = "0.0.1"
@@ -13,6 +17,5 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
-[build-system]  # Projenin hangi araçlar ve yapılandırmalarla paketleneceğini belirler.
-requires = ["setuptools", "wheel"]        # Paketleme işlemi için gerekli olan araçları belirtir.
-build-backend = "setuptools.build_meta"   # Paketleme işlemini gerçekleştirecek backend'i belirtir. 
+
+
